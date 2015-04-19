@@ -23,6 +23,8 @@ public:
   I2CUTIL();
   void begin(void);
   void dump_reg(uint8_t address, uint8_t START, uint8_t END);
+  void Scan(void);
+  void Scan(uint8_t start, uint8_t end);
   
 protected:
 

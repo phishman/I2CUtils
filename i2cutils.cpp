@@ -70,3 +70,49 @@ void I2CUTIL::dump_reg(uint8_t address, uint8_t START, uint8_t END) {
   Serial.print("\n");
   Serial.println("...END...");
 }
+
+
+void I2CUTIL::Scan(void) {
+  Scan((uint8_t) 0x01, (uint8_t) 0x7F);
+}
+
+void I2CUTIL::Scan(uint8_t start, uint8_t end) {
+  
+  byte error, address;
+  int nDevices;
+
+  Serial.println("Scanning...");
+
+  nDevices = 0;
+  for(address = start; address < end; address++ ) 
+  {
+    // The i2c_scanner uses the return value of
+    // the Write.endTransmisstion to see if
+    // a device did acknowledge to the address.
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+
+    if (error == 0)
+    {
+      Serial.print("I2C device found at address 0x");
+      if (address<16) 
+        Serial.print("0");
+      Serial.print(address,HEX);
+      Serial.println("  !");
+
+      nDevices++;
+    }
+    else if (error==4) 
+    {
+      Serial.print("Unknow error at address 0x");
+      if (address<16) 
+        Serial.print("0");
+      Serial.println(address,HEX);
+    }    
+  }
+  if (nDevices == 0)
+    Serial.println("No I2C devices found\n");
+  else
+    Serial.println("done\n");
+
+}
